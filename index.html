@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Custom PPT Order</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .welcome {
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+      animation: heartbeat 1.8s infinite;
+      text-shadow: 0 0 10px #25D366, 0 0 20px #25D366;
+    }
+
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.05); }
+      50% { transform: scale(1); opacity: 0.85; }
+      75% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    .box {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      width: 100%;
+      max-width: 380px;
+      padding: 24px;
+      border-radius: 18px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      color: #fff;
+    }
+
+    h3 {
+      text-align: center;
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      opacity: 0.9;
+      margin-bottom: 15px;
+    }
+
+    input, select, button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input, select {
+      background: rgba(255,255,255,0.95);
+    }
+
+    .price {
+      margin-top: 12px;
+      font-weight: bold;
+      text-align: center;
+      color: #ffeb3b;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 18px;
+      background: #25D366;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .note {
+      margin-top: 12px;
+      font-size: 12px;
+      text-align: center;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    .thankyou {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      background: rgba(37,211,102,0.2);
+      border: 1px solid #25D366;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+      color: #eafff3;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="welcome">👋 Welcome! Order Your PPT Now</div>
+
+  <div class="box">
+    <h3>Custom PPT Order</h3>
+    <div class="subtitle">Delivery in 24 hours · No watermark</div>
+
+    <input type="text" id="dept" placeholder="Department Name">
+    <input type="text" id="course" placeholder="Course Name">
+    <input type="text" id="topic" placeholder="PPT Topic">
+
+    <input type="number" id="slides" placeholder="Number of Slides" oninput="calculatePrice()">
+
+    <select id="theme">
+      <option value="">Select PPT Theme</option>
+      <option>Minimal</option>
+      <option>Professional</option>
+      <option>Creative</option>
+      <option>Dark</option>
+    </select>
+
+    <div class="price" id="priceText">Price: ₹0</div>
+
+    <input type="text" id="customerWp" placeholder="Your WhatsApp Number">
+
+    <button onclick="sendToWhatsApp()">Order via WhatsApp</button>
+
+    <div class="thankyou" id="thankyouMsg">
+      ✅ Thank you! Your order has been sent.<br>
+      We’ll contact you shortly on WhatsApp.
+    </div>
+
+    <div class="note">
+      Payment via UPI only<br>
+      PPT delivered after UTR verification
+    </div>
+  </div>
+
+  <script>
+    let finalPrice = 0;
+    const ownerNumber = "916291403783";
+
+    function calculatePrice() {
+      let slides = document.getElementById("slides").value;
+
+      if (slides >= 1 && slides <= 7) finalPrice = 15;
+      else if (slides >= 8 && slides <= 10) finalPrice = 20;
+      else if (slides >= 11 && slides <= 15) finalPrice = 25;
+      else if (slides >= 16 && slides <= 20) finalPrice = 30;
+      else finalPrice = 0;
+
+      document.getElementById("priceText").innerText = "Price: ₹" + finalPrice;
+    }
+
+    function sendToWhatsApp() {
+      let dept = document.getElementById("dept").value;
+      let course = document.getElementById("course").value;
+      let topic = document.getElementById("topic").value;
+      let slides = document.getElementById("slides").value;
+      let theme = document.getElementById("theme").value;
+      let customerWp = document.getElementById("customerWp").value;
+
+      if (
+        dept === "" || course === "" || topic === "" ||
+        slides === "" || theme === "" || customerWp === "" || finalPrice === 0
+      ) {
+        alert("Please fill all details correctly");
+        return;
+      }
+
+      let message =
+`Hello, I want to order a PPT.
+
+🏫 Department: ${dept}
+📘 Course: ${course}
+📌 Topic: ${topic}
+📊 Slides: ${slides}
+🎨 Theme: ${theme}
+💰 Price: ₹${finalPrice}
+📱 My WhatsApp: ${customerWp}`;
+
+      let url = "https://wa.me/" + ownerNumber + "?text=" + encodeURIComponent(message);
+      window.open(url, "_blank");
+
+      document.getElementById("thankyouMsg").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
